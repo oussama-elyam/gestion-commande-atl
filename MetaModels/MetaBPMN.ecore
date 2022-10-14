@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="Bpmn" nsURI="bpmnUri" nsPrefix="bpmnPrefix">
+  <eClassifiers xsi:type="ecore:EEnum" name="Transform">
+    <eLiterals name="yes" value="1"/>
+    <eLiterals name="no"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TypeTask">
+    <eLiterals name="notmanual"/>
+    <eLiterals name="manual" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TypeSequence">
+    <eLiterals name="direct" value="1"/>
+    <eLiterals name="returnBack"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Object">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categories" upperBound="-1"
+        eType="#//Category" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Association" eSuperTypes="#//Object"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StateObject" eSuperTypes="#//Object">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transformable" eType="#//Transform"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Group" eSuperTypes="#//Object">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transformable" eType="#//Transform"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1"
+        eType="#//Object" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Pool" eSuperTypes="#//Object">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lanes" upperBound="-1"
+        eType="#//Lane" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Lane" eSuperTypes="#//Object">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transformable" eType="#//Transform"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1"
+        eType="#//Object" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataObject" eSuperTypes="#//Object">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transformable" eType="#//Transform"
+        changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="belongsGroup" eType="#//Group"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="belongsSubprocess" eType="#//Subprocess"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateobject" eType="#//StateObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Subprocess" eSuperTypes="#//Object">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transformable" eType="#//Transform"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="belongsLane" eType="#//Lane"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="belongsGroup" eType="#//Group"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Task" eSuperTypes="#//Object">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//TypeTask"
+        unsettable="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transformable" eType="#//Transform"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="belongSubprocess" eType="#//Subprocess"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateobject" eType="#//StateObject"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gatewayIn" eType="#//GateWay"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="flowIn" eType="#//Flow"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="flowOut" eType="#//Flow"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eventIn" eType="#//Event"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eventOut" eType="#//Event"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Transaction" eSuperTypes="#//Subprocess"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NestedSubprocess" eSuperTypes="#//Subprocess"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Flow" eSuperTypes="#//Object">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Transformable" eType="#//Transform"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dataSource" eType="#//DataObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dataTarget" eType="#//DataObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gatewaySource" eType="#//GateWay"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gatewayTarget" eType="#//GateWay"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eventTarget" eType="#//Event"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eventSource" eType="#//Event"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MessageFlow" eSuperTypes="#//Flow">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="#//Pool" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="#//Pool" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CompensationAssociation" eSuperTypes="#//MessageFlow"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceFlow" eSuperTypes="#//Flow">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//TypeSequence"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Uncontrolled" eSuperTypes="#//SequenceFlow"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Normal" eSuperTypes="#//SequenceFlow"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Default" eSuperTypes="#//SequenceFlow"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Conditional" eSuperTypes="#//SequenceFlow"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Exception" eSuperTypes="#//SequenceFlow">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intermediateEvent" eType="#//Event"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Event" eSuperTypes="#//Object">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transformable" eType="#//Transform"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gatewayIn" eType="#//GateWay"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gatewayOut" eType="#//GateWay"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="flowOut" eType="#//Flow"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="flowIn" eType="#//Flow"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Compensation" eSuperTypes="#//Event">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="compensationAssociation"
+        eType="#//CompensationAssociation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//Event"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Timer" eSuperTypes="#//Event"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Error" eSuperTypes="#//Event"/>
+  <eClassifiers xsi:type="ecore:EClass" name="None" eSuperTypes="#//Event"/>
+  <eClassifiers xsi:type="ecore:EClass" name="End" eSuperTypes="#//Event"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Concel" eSuperTypes="#//Event"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Multiple" eSuperTypes="#//Event"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Start" eSuperTypes="#//Event"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Rule" eSuperTypes="#//Event"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Link" eSuperTypes="#//Event"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GateWay">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="transformable" eType="#//Transform"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Or" eSuperTypes="#//GateWay"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Exclusive" eSuperTypes="#//GateWay"/>
+  <eClassifiers xsi:type="ecore:EClass" name="parallel" eSuperTypes="#//GateWay"/>
+  <eClassifiers xsi:type="ecore:EClass" name="JoinParallel" eSuperTypes="#//GateWay"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Complex" eSuperTypes="#//GateWay"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ForkExclusive" eSuperTypes="#//GateWay"/>
+  <eClassifiers xsi:type="ecore:EClass" name="JoinExclusive" eSuperTypes="#//GateWay"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ForkParallel" eSuperTypes="#//GateWay"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Category"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Container">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1"
+        eType="#//Object" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>
