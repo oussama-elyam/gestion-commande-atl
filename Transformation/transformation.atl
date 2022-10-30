@@ -1,0 +1,142 @@
+-- @path MMIFML=/BPMN2IFML/metamodels/MetaIFML.ecore
+-- @path MMBPMN=/BPMN2IFML/metamodels/MetaBPMN.ecore
+
+module transformation;
+create OUT : MMIFML from IN : MMBPMN;
+
+
+helper context MMBPMN!SequenceFlow def: flowSource(): MMBPMN!Object =
+	if self.TaskSource then
+		self.TaskSource
+	else
+		self.eventSource
+	endif
+;
+
+helper context MMBPMN!SequenceFlow def: flowTarget(): MMBPMN!Object =
+	if self.TaskTarget then
+		self.TaskTarget
+	else
+		self.eventTarget
+	endif
+;
+
+rule special {
+	from 
+		archi : MMBPMN!Archi
+	to 
+		base : MMIFML!base (
+			objet <- archi.objet
+		)
+}
+
+rule R1 {
+	from
+		dto : MMBPMN!DataObject
+	to
+		vcp : MMIFML!ViewComponent (
+			Name <- dto.name	
+		)
+}
+
+
+rule R2 {
+	from
+		dto : MMBPMN!DataObject 
+		(dto.State = 1)
+	to
+		vcn : MMIFML!ViewContainer (
+			Name <- 'WebPage' + dto.name
+		),
+		lst : MMIFML!List (
+			Name <- 'List' + dto.name,
+			ContainerBelongs <- vcn.Name
+		),
+		osev : MMIFML!OnSelectEvent (
+		viewComponentPart <- lst.Name	
+		)
+}
+
+rule R3 {
+	from
+		dto : MMBPMN!DataObject
+		(dto.State = 2)
+	to
+		vcn : MMIFML!ViewContainer (Name <- '"Web Page"' + dto.name),
+		ac : MMIFML!Action(
+			Name <- 'Delete',
+			viewContainer <- vcn.Name
+		)
+}
+
+rule R4 {
+	from
+		dto : MMBPMN!DataObject
+		(dto.State = 3)
+	to
+		vcn : MMifml!ViewContainer (name <- '"WebPage"'+dto.name),
+		frm : MMIFML!Form (
+			Name <- 'Form' + dto.name,
+			viewcontainer <- vcn.name
+		),
+		osev : MMIFML!OnSubmitEvent (viewComponentPart <- frm.Name)
+}
+
+rule R5 {
+	from
+		exl : MMBPMN!ForkExclusive
+	to 
+		vcp : MMIFML!ViewComponent (Name <- '"Menu"' + exl.name)
+}
+
+rule R6 {
+	from
+		fl : MMBPMN!Flow
+		(fl.gatewaySource.oclIsUndefined() = false)
+	to 
+		ev : MMIFML!Event (
+			Name <- fl.Name
+		)
+}
+
+rule R7 {
+	from
+		prl : MMBPMN!ForkParallel
+	to 
+		vcp : MMIFML!ViewComponent (Name <- '"Menu"' + prl.name)
+}
+
+--rule R8 {
+--	from
+--		fl : MMBPMN!SequenceFlow
+--	to 
+--		ev : MMIFML!Event (
+--			Name <- fl.Name
+--		)
+--}
+
+rule R10 {
+	from
+		tsk : MMBPMN!Task
+	to 
+		vcn : MMIFML!ViewContainer (
+			Name <- tsk.name
+--			,
+--			inInteractionFlows <- tsk.flowIn,
+--			outInteractionFlows <- tsk.flowOut
+		)
+}
+
+rule R11 {
+	from
+		sqf : MMBPMN!SequenceFlow
+		(sqf.gatewaySource.oclIsUndefined())
+	to 
+		nvf : MMIFML!NavigationFlow (
+			Name <- sqf.Name
+			,
+			sourceInteractionFlowElement <- sqf.flowSource(),
+			targetInteractionflowelement <- sqf.flowTarget()
+		)
+}
+
